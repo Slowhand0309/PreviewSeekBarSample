@@ -35,13 +35,16 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     // ExoPlayer
-    def exoplayer_version = '2.10.8'
+    def exoplayer_version = '2.8.1'
     implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer_version"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer_version"
 
     // PreviewSeekBar
     implementation 'com.github.rubensousa:previewseekbar:2.0.0'
     implementation 'com.github.rubensousa:previewseekbar-exoplayer:2.8.1.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'jp.wasabeef:glide-transformations:4.1.0'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

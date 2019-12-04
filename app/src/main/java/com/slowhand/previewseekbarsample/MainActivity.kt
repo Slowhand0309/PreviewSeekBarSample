@@ -3,19 +3,17 @@ package com.slowhand.previewseekbarsample
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy
-import com.google.android.exoplayer2.upstream.LoadErrorHandlingPolicy
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 
 const val SAMPLE_MP4_URL = "https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4"
 
@@ -51,13 +49,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun createPlayer(): ExoPlayer {
         val dataSourceFactory = DefaultDataSourceFactory(
-            this@MainActivity,
+            this@MainActivity, DefaultBandwidthMeter(),
             DefaultHttpDataSourceFactory(Util.getUserAgent(this@MainActivity, packageName))
         )
-        val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+        val videoSource = ExtractorMediaSource.Factory(dataSourceFactory)
             .createMediaSource(Uri.parse(SAMPLE_MP4_URL))
 
-        return ExoPlayerFactory.newSimpleInstance(this@MainActivity).apply {
+        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(DefaultBandwidthMeter())
+        val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
+        return ExoPlayerFactory.newSimpleInstance(this@MainActivity, trackSelector).apply {
             prepare(videoSource)
             playWhenReady = true
         }
